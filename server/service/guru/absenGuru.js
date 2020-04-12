@@ -1,8 +1,4 @@
-const moment = require("moment");
-
-let dateToday = moment().format("YYYY-MM-DD");
-let dateTimeToday = moment().format("YYYY-MM-DD HH:MM:SS");
-let dateTommorrow = moment().add(1, "d").format("YYYY-MM-DD");
+const date = require("../../constant/date");
 
 const _getIdGuru = async (conn, nik, cb) => {
   await conn.query("SELECT id_guru FROM tbl_guru WHERE nik = ?", nik, (err, id) => {
@@ -22,7 +18,7 @@ const _getIdGuru = async (conn, nik, cb) => {
 const _cekAbsen = async (conn, id, cb) => {
   await conn.query(
     "SELECT * FROM tbl_absen_guru WHERE id_guru = ? AND tgl >= ? AND tgl < ? ",
-    [id, dateToday, dateTommorrow],
+    [id, date.dateToday, date.dateTommorrow],
     (err, absen) => {
       if (err) {
         cb(err);
@@ -80,7 +76,7 @@ const _absenGuru = async (conn, id, cb) => {
       } else if (absen) {
         cb(null, {
           status: 200,
-          tgl: dateTimeToday,
+          tgl: date.dateTimeToday,
           absen: true,
         });
       } else {
