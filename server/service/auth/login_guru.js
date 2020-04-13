@@ -1,22 +1,20 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const moment = require("moment");
-const validasi = require("./validasi/validasi_login_guru");
-const SECRET_TOKEN = require("../../config/secret");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const validasi = require('./validasi/validasi_login_guru');
+const SECRET_TOKEN = require('../../config/secret');
+const date = require('../../constant/date');
 
 const _getAbsensi = async (conn, id, cb) => {
-  let dateToday = moment().format("YYYY-MM-DD");
-  let dateTommorrow = moment().add(1, "d").format("YYYY-MM-DD");
   await conn.query(
-    "SELECT * FROM tbl_absen_guru WHERE id_guru = ? AND tgl >= ? AND tgl < ? ",
-    [id, dateToday, dateTommorrow],
+    'SELECT * FROM tbl_absen_guru WHERE id_guru = ? AND tgl >= ? AND tgl < ? ',
+    [id, date.dateToday, date.dateTommorrow],
     (err, absen) => {
       if (err) {
         cb(err);
       } else if (absen.length > 0) {
-        cb(null, "Masuk");
+        cb(null, 'Masuk');
       } else {
-        cb(null, "Belum absen");
+        cb(null, 'Belum absen');
       }
     }
   );
@@ -27,7 +25,7 @@ module.exports = loginGuru = async (conn, data, cb) => {
     if (err) {
       cb(err);
     } else if (good) {
-      conn.query("SELECT * FROM tbl_guru WHERE nik = ?", data.nik, (err, guru) => {
+      conn.query('SELECT * FROM tbl_guru WHERE nik = ?', data.nik, (err, guru) => {
         if (err) {
           cb(err);
         } else if (guru.length > 0) {
@@ -47,13 +45,13 @@ module.exports = loginGuru = async (conn, data, cb) => {
                     },
                     SECRET_TOKEN,
                     {
-                      expiresIn: "24h",
+                      expiresIn: '24h',
                     }
                   );
                   cb(null, {
                     status: 200,
                     logged: true,
-                    role: "Guru",
+                    role: 'Guru',
                     token: token,
                     absen: result,
                   });
@@ -62,21 +60,21 @@ module.exports = loginGuru = async (conn, data, cb) => {
             } else {
               cb({
                 status: 400,
-                msg: "Password yang anda masukkan salah",
+                msg: 'Password yang anda masukkan salah',
               });
             }
           });
         } else {
           cb({
             status: 404,
-            msg: "NIK tidak ditemukan",
+            msg: 'NIK tidak ditemukan',
           });
         }
       });
     } else {
       cb({
         status: 500,
-        msg: "Gagal memvalidasi data",
+        msg: 'Gagal memvalidasi data',
       });
     }
   });
