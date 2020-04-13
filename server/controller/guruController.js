@@ -10,6 +10,7 @@ const _readGuruImages = require("../service/guru/readOwnImage");
 const _readAnakWali = require("../service/guru/readAnakWali");
 const _deleteGuru = require("../service/guru/deleteGuru");
 const _absenGuruService = require("../service/guru/absenGuru");
+const _absenSiswaWali = require("../service/guru/absenAnakWali");
 
 const controller = {
   createGuru: (req, res) => {
@@ -177,6 +178,40 @@ const controller = {
             res.json(result);
           }
         });
+      }
+    });
+  },
+  absenAnakWali: (req, res) => {
+    req.getConnection((err, conn) => {
+      if (err) {
+        res.send(err);
+      } else {
+        let nik = req.decoded.nik;
+        let id_siswa = req.params.id;
+        if (req.file) {
+          let data = {
+            status: req.params.status,
+            file: req.file.filename,
+          };
+          _absenSiswaWali(conn, id_siswa, nik, data, (err, result) => {
+            if (err) {
+              res.json(err);
+            } else {
+              res.json(result);
+            }
+          });
+        } else {
+          let data = {
+            status: req.params.status,
+          };
+          _absenSiswaWali(conn, id_siswa, nik, data, (err, result) => {
+            if (err) {
+              res.json(err);
+            } else {
+              res.json(result);
+            }
+          });
+        }
       }
     });
   },
