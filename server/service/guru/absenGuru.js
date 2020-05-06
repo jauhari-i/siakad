@@ -106,7 +106,7 @@ const _absen = async (conn, nik, cb) => {
             }
           });
         }else{
-          cb(null,isABsen)
+          cb(null,isAbsen)
         }
       });
     }

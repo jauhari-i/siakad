@@ -9,6 +9,7 @@ const _readOwnData = require("../service/guru/readOwnData");
 const _readGuruImages = require("../service/guru/readOwnImage");
 const _readAnakWali = require("../service/guru/readAnakWali");
 const _readAllGuru = require("../service/guru/readAll")
+const _readImageGuru = require("../service/guru/readImageGuru")
 const _deleteGuru = require("../service/guru/deleteGuru");
 const _absenGuruService = require("../service/guru/absenGuru");
 const _absenSiswaWali = require("../service/guru/absenAnakWali");
@@ -110,6 +111,22 @@ const controller = {
       } else {
         let nik = req.decoded.nik;
         _readGuruImages(conn, nik, (err, result) => {
+          if (err) {
+            res.json(err);
+          } else {
+            res.sendFile(path.join(__dirname, "../public/img", result));
+          }
+        });
+      }
+    });
+  },
+  readImageGuru: (req, res) => {
+    req.getConnection((err, conn) => {
+      if (err) {
+        res.send(err);
+      } else {
+        let nik = req.params.nik;
+        _readImageGuru(conn, nik, (err, result) => {
           if (err) {
             res.json(err);
           } else {

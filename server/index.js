@@ -1,6 +1,6 @@
 const express = require('express');
 const log = require('morgan');
-const bodyParser = require('body-parser');
+const body_parser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const port = 8080;
@@ -18,12 +18,13 @@ if (db) {
 
 app.use(log('combined'));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(body_parser.json());
+app.use(body_parser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
   res.redirect('/api');
 });
+
 app.use('/api', require('./routes/api/api'));
 
 app.listen(port, () => console.log(`Siakad api port: ${port}!`));

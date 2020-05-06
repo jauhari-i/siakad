@@ -1,5 +1,5 @@
 module.exports = readOwnImageGuru = async (conn, nik, cb) => {
-  conn.query("SELECT * FROM tbl_guru WHERE nik = ?", nik, (err, guru) => {
+  await conn.query("SELECT * FROM tbl_guru WHERE nik = ?", nik, (err, guru) => {
     if (err) {
       cb(err);
     } else if (guru.length > 0) {

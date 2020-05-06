@@ -36,7 +36,7 @@ module.exports = readAllGuru = async (conn,cb) => {
                                                     wali_kelas: kelasData,
                                                     jumlah_siswa: jumlahSiswa,
                                                     absensi: absen,
-                                                    img: item.img
+                                                    img: item.foto
                                                 })
                                                 if(dataGuru.length === guru.length){
                                                     return cb(null,dataGuru)
@@ -58,7 +58,7 @@ module.exports = readAllGuru = async (conn,cb) => {
                                 email: item.email,
                                 wali_kelas: "Tidak menjadi wali dari kelas apapun",
                                 absensi: absen,
-                                img: item.img
+                                img: item.foto
                             })
                             if(dataGuru.length === guru.length){
                                 return cb(null,dataGuru)

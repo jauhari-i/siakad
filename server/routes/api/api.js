@@ -22,8 +22,9 @@ app.post("/login/guru", authController.loginGuru);
 app.post("/create/guru", [checkToken, checkGuru, hasImage], guruController.createGuru);
 
 // read
-app.get("/read/guru/img", [checkToken, checkGuru], guruController.readOwnImage);
 app.get("/read/guru", [checkToken, checkGuru], guruController.readOwnData);
+app.get("/read/guru/img", [checkToken, checkGuru], guruController.readOwnImage);
+app.get("/read/guru/img/:nik", guruController.readImageGuru)
 app.get("/read/guru/all", [checkToken], guruController.readAllGuru)
 app.get("/absen/guru", [checkToken, checkGuru], guruController.absenGuru);
 app.get("/absen/siswa/:id/:status", [checkToken, checkGuru], guruController.absenAnakWali);
