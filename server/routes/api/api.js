@@ -8,11 +8,11 @@ const guruController = require("../../controller/guruController");
 // middleware
 const checkToken = require("../../config/middleware/cekToken");
 const checkGuru = require("../../config/middleware/cekGuru");
-const hasImage = require("../../config/middleware/hasImage");
 const cekAdmin = require("../../config/middleware/cekAdmin");
+const hasImage = require("../../config/middleware/hasImage");
 const uploadBukti = require("../../config/middleware/uploadBukti");
 
-app.get("/", (req, res) => res.send("Welcome To Siakad API v1"));
+app.get("/", (req, res) => res.send("Welcome To Siakad API v2"));
 
 // auth
 app.post("/login/siswa", authController.loginSiswa);
@@ -24,6 +24,7 @@ app.post("/create/guru", [checkToken, checkGuru, hasImage], guruController.creat
 // read
 app.get("/read/guru/img", [checkToken, checkGuru], guruController.readOwnImage);
 app.get("/read/guru", [checkToken, checkGuru], guruController.readOwnData);
+app.get("/read/guru/all", [checkToken], guruController.readAllGuru)
 app.get("/absen/guru", [checkToken, checkGuru], guruController.absenGuru);
 app.get("/absen/siswa/:id/:status", [checkToken, checkGuru], guruController.absenAnakWali);
 app.get("/absen/cek", [checkToken, checkGuru], guruController.cekAbsen);

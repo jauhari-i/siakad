@@ -1,7 +1,7 @@
 // on going
 const date = require("../../constant/date");
 
-const _getIdGuru = async (conn, nik, cb) => {
+const _getKelasGuru = async (conn, nik, cb) => {
   await conn.query("SELECT kelas FROM tbl_guru WHERE nik = ?", nik, (err, kls) => {
     if (err) {
       cb(err);
@@ -32,7 +32,7 @@ const _getKelasSiswa = async (conn, id, cb) => {
 };
 
 const _cekAnakWali = async (conn, id, nik, cb) => {
-  await _getIdGuru(conn, nik, (err, kelas) => {
+  await _getKelasGuru(conn, nik, async (err, kelas) => {
     if (err) {
       cb(err);
     } else {
@@ -42,7 +42,7 @@ const _cekAnakWali = async (conn, id, nik, cb) => {
           msg: "Anda bukan wali kelas!",
         });
       } else {
-        _getKelasSiswa(conn, id, (err, kelasSiswa) => {
+        await _getKelasSiswa(conn, id, async (err, kelasSiswa) => {
           if (err) {
             cb(err);
           } else {
@@ -52,7 +52,7 @@ const _cekAnakWali = async (conn, id, nik, cb) => {
                 msg: "Anda bukan wali kelas siswa ini!",
               });
             } else {
-              _cekAbsensi(conn, id, (err, isAbsen, notAbsen) => {
+             await _cekAbsensi(conn, id, (err, isAbsen, notAbsen) => {
                 if (err) {
                   cb(err);
                 } else if (isAbsen) {
@@ -173,14 +173,14 @@ const _hasBukti = async (conn, id, status, bukti, cb) => {
 };
 
 module.exports = absenWali = async (conn, id, nik, data, cb) => {
-  await _cekAnakWali(conn, id, nik, (err, isAbsen, notAbsen) => {
+  await _cekAnakWali(conn, id, nik, async(err, isAbsen, notAbsen) => {
     if (err) {
       cb(err);
     } else if (isAbsen) {
       cb(null, isAbsen);
     } else if (notAbsen) {
       if (data.file) {
-        _hasBukti(conn, id, data.status, data.file, (err, absen) => {
+       await _hasBukti(conn, id, data.status, data.file, (err, absen) => {
           if (err) {
             cb(err);
           } else {
@@ -188,7 +188,7 @@ module.exports = absenWali = async (conn, id, nik, data, cb) => {
           }
         });
       } else {
-        _noBukti(conn, id, data.status, (err, absen) => {
+       await _noBukti(conn, id, data.status, (err, absen) => {
           if (err) {
             cb(err);
           } else {

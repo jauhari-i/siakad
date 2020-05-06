@@ -1,3 +1,5 @@
+const absenGuru = require("./absenGuru")
+
 _getKelas = (conn, id, cb) => {
   conn.query(
     "SELECT * FROM tbl_kelas INNER JOIN tbl_jurusan ON tbl_kelas.jurusan=tbl_jurusan.id_jurusan INNER JOIN tbl_tingkat ON tbl_kelas.tingkat=tbl_tingkat.id_tingkat WHERE id_kelas = ? ",
@@ -41,32 +43,46 @@ module.exports = readOwnData = async (conn, nik, cb) => {
               if (err) {
                 cb(err);
               } else {
-                let guruData = guru.map((g) => ({
-                  nama: g.nama,
-                  nik: g.nik,
-                  email: g.email,
-                  wali_kelas: result[0],
-                  jumlah_siswa: jumlah,
-                }));
-                cb(null, {
-                  status: 200,
-                  data: guruData,
-                });
+                absenGuru.cekAbsen(conn,nik,(err,absen) => {
+                  if(err){
+                    cb(err)
+                  }else{
+                    let guruData = guru.map((g) => ({
+                      nama: g.nama,
+                      nik: g.nik,
+                      email: g.email,
+                      wali_kelas: result[0],
+                      jumlah_siswa: jumlah,
+                      absensi: absen
+                    }));
+                    cb(null, {
+                      status: 200,
+                      data: guruData,
+                    });
+                  }
+                })
               }
             });
           }
         });
       } else {
-        let guruData = guru.map((g) => ({
-          nama: g.nama,
-          nik: g.nik,
-          email: g.email,
-          wali_kelas: "Tidak menjadi wali dari kelas apapun",
-        }));
-        cb(null, {
-          status: 200,
-          data: guruData,
-        });
+        absenGuru.cekAbsen(conn,nik,(err,absen) => {
+          if(err){
+            cb(err)
+          }else{
+            let guruData = guru.map((g) => ({
+              nama: g.nama,
+              nik: g.nik,
+              email: g.email,
+              wali_kelas: "Tidak menjadi wali dari kelas apapun",
+              absensi: absen
+            }));
+            cb(null, {
+              status: 200,
+              data: guruData,
+            });
+          }
+        })
       }
     } else {
       cb({

@@ -24,37 +24,37 @@ const _cekAbsen = async (conn, id, cb) => {
         cb(err);
       } else if (absen.length > 0) {
         if (absen[0].status === 1) {
-          cb({
+          cb(null,null,{
             status: 200,
-            msg: "Anda sudah melakukan absensi hari ini",
+            msg: "Sudah melakukan absensi hari ini",
             status_kehadiran: "Masuk",
             kehadiran_kode: 1,
           });
         } else if (absen[0].status === 2) {
-          cb({
+          cb(null,null,{
             status: 200,
-            msg: "Anda sudah melakukan absensi hari ini",
+            msg: "Sudah melakukan absensi hari ini",
             status_kehadiran: "Sakit",
             kehadiran_kode: 2,
           });
         } else if (absen[0].status === 3) {
-          cb({
+          cb(null,null,{
             status: 200,
-            msg: "Anda sudah melakukan absensi hari ini",
+            msg: "Sudah melakukan absensi hari ini",
             status_kehadiran: "Izin",
             kehadiran_kode: 3,
           });
         } else if (absen[0].status === 4) {
-          cb({
+          cb(null,null,{
             status: 200,
-            msg: "Anda sudah melakukan absensi hari ini",
+            msg: "Sudah melakukan absensi hari ini",
             status_kehadiran: "Dispensasi",
             kehadiran_kode: 4,
           });
         } else {
-          cb({
+          cb(null,null,{
             status: 200,
-            msg: "Anda tidak melakukan absensi hari ini",
+            msg: "Tidak melakukan absensi hari ini",
             status_kehadiran: "Alpha",
             kehadiran_kode: 0,
           });
@@ -94,10 +94,10 @@ const _absen = async (conn, nik, cb) => {
     if (err) {
       cb(err);
     } else {
-      _cekAbsen(conn, id, (err, isAbsen) => {
+      _cekAbsen(conn, id, (err, notAbsen, isAbsen) => {
         if (err) {
           cb(err);
-        } else {
+        } else if(notAbsen){
           _absenGuru(conn, id, (err, absen) => {
             if (err) {
               cb(err);
@@ -105,6 +105,8 @@ const _absen = async (conn, nik, cb) => {
               cb(null, absen);
             }
           });
+        }else{
+          cb(null,isABsen)
         }
       });
     }
@@ -112,19 +114,21 @@ const _absen = async (conn, nik, cb) => {
 };
 
 const _cek = async (conn, nik, cb) => {
-  await _getIdGuru(conn, nik, (err, id) => {
+  await _getIdGuru(conn, nik, async (err, id) => {
     if (err) {
       cb(err);
     } else {
-      _cekAbsen(conn, id, (err, isAbsen) => {
+     await _cekAbsen(conn, id, (err, noAbsen, isAbsen) => {
         if (err) {
           cb(err);
-        } else {
+        } else if(noAbsen){
           cb(null, {
-            absen: !isAbsen,
+            absen: !noAbsen,
             status: 200,
-            msg: "Anda belum melakukan absensi hari ini",
+            msg: "Belum melakukan absensi hari ini",
           });
+        }else{
+          cb(null,isAbsen)
         }
       });
     }

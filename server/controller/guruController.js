@@ -8,9 +8,11 @@ const _updateGuruDataWithImages = require("../service/guru/updateGuruDataWithIma
 const _readOwnData = require("../service/guru/readOwnData");
 const _readGuruImages = require("../service/guru/readOwnImage");
 const _readAnakWali = require("../service/guru/readAnakWali");
+const _readAllGuru = require("../service/guru/readAll")
 const _deleteGuru = require("../service/guru/deleteGuru");
 const _absenGuruService = require("../service/guru/absenGuru");
 const _absenSiswaWali = require("../service/guru/absenAnakWali");
+
 
 const controller = {
   createGuru: (req, res) => {
@@ -182,7 +184,7 @@ const controller = {
     });
   },
   absenAnakWali: (req, res) => {
-    req.getConnection((err, conn) => {
+    req.getConnection(async (err, conn) => {
       if (err) {
         res.send(err);
       } else {
@@ -193,7 +195,7 @@ const controller = {
             status: req.params.status,
             file: req.file.filename,
           };
-          _absenSiswaWali(conn, id_siswa, nik, data, (err, result) => {
+          await _absenSiswaWali(conn, id_siswa, nik, data, (err, result) => {
             if (err) {
               res.json(err);
             } else {
@@ -204,7 +206,7 @@ const controller = {
           let data = {
             status: req.params.status,
           };
-          _absenSiswaWali(conn, id_siswa, nik, data, (err, result) => {
+          await _absenSiswaWali(conn, id_siswa, nik, data, (err, result) => {
             if (err) {
               res.json(err);
             } else {
@@ -215,6 +217,21 @@ const controller = {
       }
     });
   },
+  readAllGuru: (req,res) => {
+    req.getConnection( async (err,conn) => {
+      if(err){
+        res.send(err)
+      }else{
+        await _readAllGuru(conn,(err,result) => {
+          if(err){
+            res.json(err)
+          }else{
+            res.json(result)
+          }
+        })
+      }
+    })
+  }
 };
 
 module.exports = controller;
