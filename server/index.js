@@ -16,7 +16,7 @@ if (db) {
   console.log('No database connection');
 }
 
-app.use(log('combined'));
+app.use(log('dev'));
 
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: false }));

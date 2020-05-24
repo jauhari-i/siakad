@@ -9,22 +9,22 @@ let pass = "";
 let image = "";
 
 module.exports = createGuru = async (conn, data, cb) => {
-  await validasiInput(data, (err, good) => {
+  await validasiInput(data, async (err, good) => {
     if (err) {
       cb(err);
     } else if (good) {
       if (data.password) {
         pass = data.password;
       }
-      bcryptjs.hash(pass ? pass : defaultPassword, 10, (err, hash) => {
+      await bcryptjs.hash(pass ? pass : defaultPassword, 10, async (err, hash) => {
         if (err) {
           cb(err);
         } else if (hash) {
-          validasiNIK(conn, data.nik, (err, result) => {
+          await validasiNIK(conn, data.nik, async (err, result) => {
             if (err) {
               cb(err);
             } else if (result) {
-              validasiEmail(conn, data.email, (err, email) => {
+              await validasiEmail(conn, data.email, async (err, email) => {
                 if (err) {
                   cb(err);
                 } else if (email) {
@@ -33,7 +33,7 @@ module.exports = createGuru = async (conn, data, cb) => {
                   } else {
                     image = "default.png";
                   }
-                  conn.query(
+                  await conn.query(
                     "INSERT INTO tbl_guru (nama,email,jenis_kelamin,nik,password, kelas, foto) VALUES (?,?,?,?,?,0,?)",
                     [
                       data.nama,
