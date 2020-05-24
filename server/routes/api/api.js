@@ -28,10 +28,16 @@ app.get('/read/guru', [checkToken, checkGuru], guruController.readOwnData);
 app.get('/read/guru/img', [checkToken, checkGuru], guruController.readOwnImage);
 app.get('/read/guru/img/:nik', [checkToken], guruController.readImageGuru);
 app.get('/read/guru/all', [checkToken], guruController.readAllGuru);
+
+// absen
 app.get('/absen/guru', [checkToken, checkGuru], guruController.absenGuru);
 app.get('/absen/siswa/:id/:status', [checkToken, checkGuru], guruController.absenAnakWali);
 app.get('/absen/cek', [checkToken, checkGuru], guruController.cekAbsen);
 app.get('/siswa/wali', [checkToken, checkGuru], guruController.readAnakWali);
+
+// laporan
+app.get('/read/laporan', [checkToken, checkGuru], laporController.readLaporan);
+app.get('/read/laporan/:id', [checkToken, checkGuru], laporController.readLaporanSingle);
 
 // update
 app.put('/edit/pass/guru', [checkToken, checkGuru], guruController.updatePass);
@@ -39,5 +45,7 @@ app.put('/edit/data/guru', [checkToken, checkGuru, hasImage], guruController.upd
 
 // delete
 app.delete('/delete/guru/:nik', [checkToken, checkGuru], guruController.deleteGuru);
+
+app.delete('/delete/laporan/:id', [checkToken, checkGuru], laporController.deleteLaporan);
 
 module.exports = app;
